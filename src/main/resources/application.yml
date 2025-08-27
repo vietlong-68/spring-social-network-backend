@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: social-network
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:social_network_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        "[format_sql]": ${JPA_FORMAT_SQL:true}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${API_CONTEXT_PATH:/api}
+
+jwt:
+  signer-key: ${JWT_SIGNER_KEY:9BZQWCbJ1dex4l/xmilDKuXfuLYecSCCF9B44x1s/m+BOlXGjQ7cjdXSU9rEoMyR}
+  expiration-hours: ${JWT_EXPIRATION_HOURS:24}
+
+logging:
+  level:
+    "[com.spring.social_network]": ${LOG_LEVEL:INFO}
+    "[org.hibernate.SQL]": ${LOG_SQL:DEBUG}
+    "[org.hibernate.type.descriptor.sql.BasicBinder]": ${LOG_SQL_PARAMS:TRACE}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
+
+cloudinary:
+  cloud_name: ${CLOUDINARY_CLOUD_NAME}
+  api_key: ${CLOUDINARY_API_KEY}
+  api_secret: ${CLOUDINARY_API_SECRET}
+
+file:
+  upload:
+    provider: ${FILE_UPLOAD_PROVIDER:local}
+    max-size: ${FILE_MAX_SIZE:5242880}
+    local:
+      path: ${FILE_UPLOAD_LOCAL_PATH:./uploads}

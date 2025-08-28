@@ -39,3 +39,6 @@ out/
 ### Environment Variables ###
 .env
 logs/*
+
+# Ignore all markdown files
+*.md

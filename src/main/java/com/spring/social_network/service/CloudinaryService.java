@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
-public class CloudinaryService {
+public class CloudinaryService implements FileUploadService {
 
     private final Cloudinary cloudinary;
-    
+
     @Value("${file.upload.max-size:1048576}")
     private long maxFileSize;
 
@@ -25,10 +25,9 @@ public class CloudinaryService {
     public String uploadFile(MultipartFile file) throws IOException {
         if (file.getSize() > maxFileSize) {
             String errorMessage = String.format(
-                "File size exceeds the maximum limit. Current size: %.2f MB, Maximum allowed: %.2f MB",
-                file.getSize() / (1024.0 * 1024.0),
-                maxFileSize / (1024.0 * 1024.0)
-            );
+                    "File size exceeds the maximum limit. Current size: %.2f MB, Maximum allowed: %.2f MB",
+                    file.getSize() / (1024.0 * 1024.0),
+                    maxFileSize / (1024.0 * 1024.0));
             throw new AppException(ErrorCode.BAD_REQUEST, errorMessage);
         }
 

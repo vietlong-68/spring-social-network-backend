@@ -42,4 +42,7 @@ cloudinary:
 
 file:
   upload:
+    provider: ${FILE_UPLOAD_PROVIDER:cloudinary}
     max-size: ${FILE_MAX_SIZE:1048576}
+    local:
+      path: ${FILE_UPLOAD_LOCAL_PATH:./uploads}

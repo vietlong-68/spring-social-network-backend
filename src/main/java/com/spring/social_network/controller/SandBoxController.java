@@ -5,9 +5,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import com.spring.social_network.dto.ApiResponse;
+import com.spring.social_network.exception.AppException;
+import com.spring.social_network.exception.ErrorCode;
+import com.spring.social_network.service.CloudinaryService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +23,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/sandbox")
 public class SandBoxController {
+    
+    private final CloudinaryService cloudinaryService;
+    
+    public SandBoxController(CloudinaryService cloudinaryService) {
+        this.cloudinaryService = cloudinaryService;
+    }
+    
     @GetMapping("/security-context")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSecurityContextInfo(
             HttpServletRequest request) {
@@ -59,5 +72,32 @@ public class SandBoxController {
         securityInfo.put("timestampReadable", java.time.Instant.now().toString());
         return ResponseEntity
                 .ok(ApiResponse.success(securityInfo, "Security context information retrieved successfully", request));
+    }
+    
+    @PostMapping("/upload-test")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> testFileUpload(
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) {
+        
+        Map<String, Object> uploadInfo = new HashMap<>();
+        
+        try {
+            uploadInfo.put("originalFilename", file.getOriginalFilename());
+            uploadInfo.put("contentType", file.getContentType());
+            uploadInfo.put("size", file.getSize());
+            uploadInfo.put("isEmpty", file.isEmpty());
+            
+            String cloudinaryUrl = cloudinaryService.uploadFile(file);
+            uploadInfo.put("cloudinaryUrl", cloudinaryUrl);
+            uploadInfo.put("uploadSuccess", true);
+            
+            return ResponseEntity.ok(ApiResponse.success(uploadInfo, 
+                "File uploaded successfully to Cloudinary", request));
+                
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED, e.getMessage());
+        }
     }
 }

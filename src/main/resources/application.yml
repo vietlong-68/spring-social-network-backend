@@ -34,3 +34,12 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
     name: logs/application.log
+
+cloudinary:
+  cloud_name: ${CLOUDINARY_CLOUD_NAME}
+  api_key: ${CLOUDINARY_API_KEY}
+  api_secret: ${CLOUDINARY_API_SECRET}
+
+file:
+  upload:
+    max-size: ${FILE_MAX_SIZE:1048576}

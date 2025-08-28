@@ -57,10 +57,6 @@ public class AdminUserService {
     }
 
     public UserResponseDto create(CreateUserRequestDto createUserRequestDto) {
-        if (userRepository.existsByUsername(createUserRequestDto.getUsername())) {
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTS,
-                    "Username already exists: " + createUserRequestDto.getUsername());
-        }
         if (userRepository.existsByEmail(createUserRequestDto.getEmail())) {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS,
                     "Email already exists: " + createUserRequestDto.getEmail());

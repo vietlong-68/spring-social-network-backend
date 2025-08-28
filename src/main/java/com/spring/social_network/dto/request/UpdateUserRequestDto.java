@@ -16,7 +16,6 @@ import com.spring.social_network.model.Role;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateUserRequestDto {
-    private String username;
     private String email;
     private String firstName;
     private String lastName;

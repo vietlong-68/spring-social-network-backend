@@ -38,13 +38,12 @@ import jakarta.persistence.FetchType;
 @Getter
 @Setter
 @Builder
-@ToString(of = { "id", "username", "email", "firstName", "lastName" })
-@EqualsAndHashCode(of = { "id", "username", "email" })
+@ToString(of = { "id", "email", "firstName", "lastName" })
+@EqualsAndHashCode(of = { "id", "email" })
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "users", indexes = {
-        @Index(name = "idx_users_username", columnList = "username", unique = true),
         @Index(name = "idx_users_email", columnList = "email", unique = true)
 })
 public class User {
@@ -52,12 +51,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", length = 36)
     private String id;
-
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Username can only contain letters, numbers, and underscores")
-    @Column(name = "username", nullable = false, length = 50)
-    private String username;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")

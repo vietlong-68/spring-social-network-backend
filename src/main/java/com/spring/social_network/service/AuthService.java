@@ -128,7 +128,6 @@ public class AuthService {
                 .expirationTime(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * jwtConfig.getExpirationHours()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("userId", user.getId())
-                .claim("username", user.getUsername())
                 .claim("email", user.getEmail())
                 .claim("scope", buildScopes(roleNames))
                 .build();

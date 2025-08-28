@@ -21,12 +21,15 @@ public class SecurityConfig {
         this.customJwtDecoder = customJwtDecoder;
     }
 
-    private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/login",
-            "/auth/logout",
-            "/auth/introspect",
-            "/auth/refresh"
-    };
+    private String[] getPublicEndpoints() {
+        return new String[] {
+                "/auth/register",
+                "/auth/login",
+                "/auth/logout",
+                "/auth/introspect",
+                "/auth/refresh"
+        };
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,7 +41,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable());
         httpSecurity
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, getPublicEndpoints()).permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)

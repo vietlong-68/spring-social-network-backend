@@ -19,6 +19,8 @@ spring:
 
 server:
   port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${API_CONTEXT_PATH:/api}
 
 jwt:
   signer-key: ${JWT_SIGNER_KEY:9BZQWCbJ1dex4l/xmilDKuXfuLYecSCCF9B44x1s/m+BOlXGjQ7cjdXSU9rEoMyR}

@@ -8,6 +8,7 @@ import org.mapstruct.MappingTarget;
 
 import com.spring.social_network.dto.request.CreateUserRequestDto;
 import com.spring.social_network.dto.request.UpdateUserRequestDto;
+import com.spring.social_network.dto.request.RegisterRequest;
 import com.spring.social_network.dto.response.UserResponseDto;
 import com.spring.social_network.model.User;
 
@@ -28,4 +29,10 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updateEntityFromRequestDto(UpdateUserRequestDto updateUserRequestDto, @MappingTarget User user);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    User toEntityFromRegisterRequest(RegisterRequest registerRequest);
 }

@@ -14,9 +14,11 @@ import com.spring.social_network.dto.request.LoginRequest;
 import com.spring.social_network.dto.request.LogoutRequest;
 import com.spring.social_network.dto.request.IntrospectRequest;
 import com.spring.social_network.dto.request.RefreshTokenRequest;
+import com.spring.social_network.dto.request.RegisterRequest;
 import com.spring.social_network.dto.response.LoginResponse;
 import com.spring.social_network.dto.response.IntrospectResponse;
 import com.spring.social_network.dto.response.RefreshTokenResponse;
+import com.spring.social_network.dto.response.RegisterResponse;
 import com.spring.social_network.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ import jakarta.validation.Valid;
  * Controller xử lý các yêu cầu xác thực và ủy quyền
  * 
  * Cung cấp các endpoint để:
+ * - Đăng ký người dùng mới
  * - Đăng nhập người dùng
  * - Đăng xuất người dùng
  * - Kiểm tra tính hợp lệ của token
@@ -43,6 +46,22 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    /**
+     * Xử lý yêu cầu đăng ký người dùng mới
+     * 
+     * @param registerRequest Thông tin đăng ký người dùng (email, mật khẩu, họ tên,
+     *                        v.v.)
+     * @param request         HttpServletRequest để lấy thông tin request
+     * @return ResponseEntity chứa thông tin đăng ký thành công
+     */
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<RegisterResponse>> register(
+            @Valid @RequestBody RegisterRequest registerRequest,
+            HttpServletRequest request) {
+        RegisterResponse registerResponse = authService.handleRegister(registerRequest);
+        return ResponseEntity.ok(ApiResponse.success(registerResponse, "Đăng ký tài khoản thành công", request));
     }
 
     /**

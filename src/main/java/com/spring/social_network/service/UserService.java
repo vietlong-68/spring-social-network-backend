@@ -99,12 +99,6 @@ public class UserService {
         }
     }
 
-    /**
-     * Cập nhật thông tin cá nhân của người dùng hiện tại
-     * 
-     * @param updateProfileRequest DTO chứa thông tin cập nhật
-     * @return UserResponseDto của người dùng đã cập nhật
-     */
     public UserResponseDto updateProfile(UpdateProfileRequestDto updateProfileRequest) {
         User currentUser = getCurrentUserEntity();
 
@@ -132,11 +126,6 @@ public class UserService {
         return userMapper.toResponseDto(updatedUser);
     }
 
-    /**
-     * Xóa ảnh đại diện của người dùng hiện tại
-     * 
-     * @return UserResponseDto của người dùng đã xóa ảnh đại diện
-     */
     public UserResponseDto removeProfilePicture() {
         User currentUser = getCurrentUserEntity();
 
@@ -146,12 +135,6 @@ public class UserService {
         return userMapper.toResponseDto(updatedUser);
     }
 
-    /**
-     * Đổi mật khẩu của người dùng hiện tại
-     * 
-     * @param changePasswordRequest DTO chứa thông tin đổi mật khẩu
-     * @return UserResponseDto của người dùng
-     */
     public UserResponseDto changePassword(ChangePasswordRequestDto changePasswordRequest) {
 
         if (!changePasswordRequest.isPasswordMatching()) {
@@ -176,25 +159,12 @@ public class UserService {
         return userMapper.toResponseDto(updatedUser);
     }
 
-    /**
-     * Lấy danh sách tất cả người dùng có phân trang
-     * 
-     * @param page Số trang (bắt đầu từ 0)
-     * @param size Kích thước mỗi trang
-     * @return Page<UserResponseDto> danh sách người dùng
-     */
     public Page<UserResponseDto> getAllUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users = userRepository.findAll(pageable);
         return users.map(userMapper::toResponseDto);
     }
 
-    /**
-     * Tìm kiếm người dùng theo tên hoặc họ
-     * 
-     * @param searchRequest DTO chứa thông tin tìm kiếm
-     * @return Page<UserResponseDto> danh sách người dùng tìm được
-     */
     public Page<UserResponseDto> searchUsers(SearchUserRequestDto searchRequest) {
         Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize());
 
@@ -210,13 +180,6 @@ public class UserService {
         return users.map(userMapper::toResponseDto);
     }
 
-    /**
-     * Lấy thông tin người dùng theo ID (cho phép USER xem thông tin người dùng
-     * khác)
-     * 
-     * @param userId ID của người dùng cần xem
-     * @return UserResponseDto thông tin người dùng
-     */
     public UserResponseDto getUserById(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng"));

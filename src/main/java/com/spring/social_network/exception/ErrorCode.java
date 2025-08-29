@@ -18,7 +18,9 @@ public enum ErrorCode {
     INVALID_CREDENTIALS("SYS_009", "Tài khoản hoặc mật khẩu không hợp lệ"),
     FILE_UPLOAD_FAILED("FILE_001", "Upload file thất bại"),
     POST_NOT_FOUND("POST_001", "Không tìm thấy bài viết"),
-    POST_FORBIDDEN("POST_002", "Không có quyền truy cập bài viết");
+    POST_FORBIDDEN("POST_002", "Không có quyền truy cập bài viết"),
+    COMMENT_NOT_FOUND("COMMENT_001", "Không tìm thấy bình luận"),
+    COMMENT_FORBIDDEN("COMMENT_002", "Không có quyền thao tác với bình luận này");
 
     private final String code;
     private final String message;

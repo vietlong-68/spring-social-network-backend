@@ -42,4 +42,7 @@ logs/*
 
 # Ignore all markdown files
 *.md
+
+# Other files
 uploads/*
+*.json

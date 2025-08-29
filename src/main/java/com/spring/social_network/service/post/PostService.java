@@ -39,11 +39,11 @@ public class PostService {
         User currentUser = userService.getCurrentUserEntity();
 
         if (request.getContent() == null || request.getContent().trim().isEmpty()) {
-            throw new AppException(ErrorCode.VALIDATION_ERROR, "Content cannot be empty");
+            throw new AppException(ErrorCode.VALIDATION_ERROR, "Nội dung không được để trống");
         }
 
         if (request.getContent().length() > 1000) {
-            throw new AppException(ErrorCode.VALIDATION_ERROR, "Content too long");
+            throw new AppException(ErrorCode.VALIDATION_ERROR, "Nội dung quá dài");
         }
 
         List<String> imageUrls = new java.util.ArrayList<>();
@@ -62,7 +62,7 @@ public class PostService {
                     }
                 } catch (Exception e) {
                     throw new AppException(ErrorCode.FILE_UPLOAD_FAILED,
-                            "Failed to upload file: " + file.getOriginalFilename());
+                            "Tải lên file thất bại: " + file.getOriginalFilename());
                 }
             }
         }
@@ -83,18 +83,18 @@ public class PostService {
     public PostResponse updatePost(String postId, UpdatePostRequest request) {
         User currentUser = userService.getCurrentUserEntity();
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "Post not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "Không tìm thấy bài viết"));
 
         if (!post.getUser().getId().equals(currentUser.getId())) {
-            throw new AppException(ErrorCode.POST_FORBIDDEN, "You can only edit your own posts");
+            throw new AppException(ErrorCode.POST_FORBIDDEN, "Bạn chỉ có thể chỉnh sửa bài viết của mình");
         }
 
         if (request.getContent() != null && request.getContent().trim().isEmpty()) {
-            throw new AppException(ErrorCode.VALIDATION_ERROR, "Content cannot be empty");
+            throw new AppException(ErrorCode.VALIDATION_ERROR, "Nội dung không được để trống");
         }
 
         if (request.getContent() != null && request.getContent().length() > 1000) {
-            throw new AppException(ErrorCode.VALIDATION_ERROR, "Content too long");
+            throw new AppException(ErrorCode.VALIDATION_ERROR, "Nội dung quá dài");
         }
 
         if (request.getContent() != null) {
@@ -117,7 +117,7 @@ public class PostService {
                     }
                 } catch (Exception e) {
                     throw new AppException(ErrorCode.FILE_UPLOAD_FAILED,
-                            "Failed to upload file: " + file.getOriginalFilename());
+                            "Tải lên file thất bại: " + file.getOriginalFilename());
                 }
             }
 
@@ -142,10 +142,10 @@ public class PostService {
     public void deletePost(String postId) {
         User currentUser = userService.getCurrentUserEntity();
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "Post not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "Không tìm thấy bài viết"));
 
         if (!post.getUser().getId().equals(currentUser.getId())) {
-            throw new AppException(ErrorCode.POST_FORBIDDEN, "You can only delete your own posts");
+            throw new AppException(ErrorCode.POST_FORBIDDEN, "Bạn chỉ có thể xóa bài viết của mình");
         }
 
         postRepository.delete(post);
@@ -183,10 +183,10 @@ public class PostService {
     public PostResponse getPostById(String postId) {
         User currentUser = userService.getCurrentUserEntity();
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "Post not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "Không tìm thấy bài viết"));
 
         if (!canViewPost(post, currentUser)) {
-            throw new AppException(ErrorCode.POST_FORBIDDEN, "You don't have permission to view this post");
+            throw new AppException(ErrorCode.POST_FORBIDDEN, "Bạn không có quyền xem bài viết này");
         }
 
         return mapToPostResponse(post, currentUser.getId());

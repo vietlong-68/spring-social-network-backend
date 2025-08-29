@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SendFriendRequestDto {
-    
-    @NotBlank(message = "Receiver ID is required")
+
+    @NotBlank(message = "ID người nhận là bắt buộc")
     private String receiverId;
 }

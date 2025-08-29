@@ -127,7 +127,7 @@ public class AuthService {
         String userId = (String) claimsSet.getClaim("userId");
 
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng"));
 
         String jti = claimsSet.getJWTID();
         Date expirationTime = claimsSet.getExpirationTime();

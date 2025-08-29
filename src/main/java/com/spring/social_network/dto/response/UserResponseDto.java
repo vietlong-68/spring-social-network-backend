@@ -25,6 +25,7 @@ public class UserResponseDto {
     private LocalDate dateOfBirth;
     private String phone;
     private String address;
+    private String profilePictureUrl;
     private Set<Role> roles;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

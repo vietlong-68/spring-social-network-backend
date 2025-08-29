@@ -51,9 +51,9 @@ public class GlobalExceptionHandler {
                         AccessDeniedException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "You do not have permission to access this resource",
+                                "Bạn không có quyền truy cập tài nguyên này",
                                 HttpStatus.FORBIDDEN.value(),
-                                "Access Denied",
+                                "Truy cập bị từ chối",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
@@ -64,9 +64,9 @@ public class GlobalExceptionHandler {
                         AuthorizationDeniedException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Access permission denied",
+                                "Quyền truy cập bị từ chối",
                                 HttpStatus.FORBIDDEN.value(),
-                                "Authorization Denied",
+                                "Ủy quyền bị từ chối",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
@@ -90,9 +90,9 @@ public class GlobalExceptionHandler {
                         AuthenticationException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Authentication failed: " + ex.getMessage(),
+                                "Xác thực thất bại: " + ex.getMessage(),
                                 HttpStatus.UNAUTHORIZED.value(),
-                                "Authentication Error",
+                                "Lỗi xác thực",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
@@ -103,9 +103,9 @@ public class GlobalExceptionHandler {
                         BadCredentialsException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Invalid credentials",
+                                "Thông tin đăng nhập không hợp lệ",
                                 HttpStatus.UNAUTHORIZED.value(),
-                                "Bad Credentials",
+                                "Thông tin đăng nhập sai",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
@@ -116,9 +116,9 @@ public class GlobalExceptionHandler {
                         AuthenticationCredentialsNotFoundException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Authentication credentials not found",
+                                "Không tìm thấy thông tin xác thực",
                                 HttpStatus.UNAUTHORIZED.value(),
-                                "Missing Credentials",
+                                "Thiếu thông tin xác thực",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
@@ -129,9 +129,9 @@ public class GlobalExceptionHandler {
                         InsufficientAuthenticationException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Insufficient authentication",
+                                "Xác thực không đủ",
                                 HttpStatus.UNAUTHORIZED.value(),
-                                "Insufficient Authentication",
+                                "Xác thực không đủ",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
@@ -179,7 +179,7 @@ public class GlobalExceptionHandler {
                 String errorMessage = String.join(", ", errors);
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Invalid request parameters",
+                                "Tham số yêu cầu không hợp lệ",
                                 HttpStatus.BAD_REQUEST.value(),
                                 errors,
                                 request);
@@ -199,7 +199,7 @@ public class GlobalExceptionHandler {
                 String errorMessage = String.join(", ", errors);
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Invalid request data",
+                                "Dữ liệu yêu cầu không hợp lệ",
                                 HttpStatus.BAD_REQUEST.value(),
                                 errors,
                                 request);
@@ -212,9 +212,9 @@ public class GlobalExceptionHandler {
                         HttpMessageNotReadableException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Request body format is invalid",
+                                "Định dạng body yêu cầu không hợp lệ",
                                 HttpStatus.BAD_REQUEST.value(),
-                                "Invalid JSON",
+                                "JSON không hợp lệ",
                                 request);
 
                 return ResponseEntity.badRequest().body(apiResponse);
@@ -225,9 +225,9 @@ public class GlobalExceptionHandler {
                         MissingServletRequestParameterException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Required parameter '" + ex.getParameterName() + "' is missing",
+                                "Tham số bắt buộc '" + ex.getParameterName() + "' bị thiếu",
                                 HttpStatus.BAD_REQUEST.value(),
-                                "Missing Parameter",
+                                "Thiếu tham số",
                                 request);
 
                 return ResponseEntity.badRequest().body(apiResponse);
@@ -238,12 +238,12 @@ public class GlobalExceptionHandler {
                         MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
 
                 Class<?> requiredType = ex.getRequiredType();
-                String typeName = requiredType != null ? requiredType.getSimpleName() : "unknown";
+                String typeName = requiredType != null ? requiredType.getSimpleName() : "không xác định";
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "Parameter '" + ex.getName() + "' should be of type " + typeName,
+                                "Tham số '" + ex.getName() + "' phải có kiểu dữ liệu " + typeName,
                                 HttpStatus.BAD_REQUEST.value(),
-                                "Type Mismatch",
+                                "Không khớp kiểu dữ liệu",
                                 request);
 
                 return ResponseEntity.badRequest().body(apiResponse);
@@ -254,9 +254,9 @@ public class GlobalExceptionHandler {
                         HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "HTTP method '" + ex.getMethod() + "' is not supported for this endpoint",
+                                "Phương thức HTTP '" + ex.getMethod() + "' không được hỗ trợ cho endpoint này",
                                 HttpStatus.METHOD_NOT_ALLOWED.value(),
-                                "Method Not Allowed",
+                                "Phương thức không được phép",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(apiResponse);
@@ -269,7 +269,7 @@ public class GlobalExceptionHandler {
                 ApiResponse<Object> apiResponse = ApiResponse.error(
                                 ex.getMessage(),
                                 HttpStatus.BAD_REQUEST.value(),
-                                "Bad Request",
+                                "Yêu cầu không hợp lệ",
                                 request);
 
                 return ResponseEntity.badRequest().body(apiResponse);
@@ -280,9 +280,9 @@ public class GlobalExceptionHandler {
                         Exception ex, HttpServletRequest request) {
 
                 ApiResponse<Object> apiResponse = ApiResponse.error(
-                                "An unexpected error occurred. Please try again later.",
+                                "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                                "Internal Server Error",
+                                "Lỗi máy chủ nội bộ",
                                 request);
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);

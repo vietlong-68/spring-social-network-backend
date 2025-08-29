@@ -55,7 +55,7 @@ public class PostController {
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(ApiResponse.<PostResponse>builder()
                                                 .success(true)
-                                                .message("Post created successfully")
+                                                .message("Tạo bài viết thành công")
                                                 .data(post)
                                                 .build());
         }
@@ -89,7 +89,7 @@ public class PostController {
                 PostResponse post = postService.updatePost(id, request);
                 return ResponseEntity.ok(ApiResponse.<PostResponse>builder()
                                 .success(true)
-                                .message("Post updated successfully")
+                                .message("Cập nhật bài viết thành công")
                                 .data(post)
                                 .build());
         }
@@ -99,7 +99,7 @@ public class PostController {
                 postService.deletePost(id);
                 return ResponseEntity.ok(ApiResponse.<Void>builder()
                                 .success(true)
-                                .message("Post deleted successfully")
+                                .message("Xóa bài viết thành công")
                                 .build());
         }
 
@@ -110,7 +110,7 @@ public class PostController {
                 PostFeedResponse feed = postService.getFeed(page, limit);
                 return ResponseEntity.ok(ApiResponse.<PostFeedResponse>builder()
                                 .success(true)
-                                .message("Feed retrieved successfully")
+                                .message("Lấy feed thành công")
                                 .data(feed)
                                 .build());
         }
@@ -120,7 +120,7 @@ public class PostController {
                 PostResponse post = postService.getPostById(id);
                 return ResponseEntity.ok(ApiResponse.<PostResponse>builder()
                                 .success(true)
-                                .message("Post retrieved successfully")
+                                .message("Lấy bài viết thành công")
                                 .data(post)
                                 .build());
         }
@@ -133,7 +133,7 @@ public class PostController {
                 PostFeedResponse posts = postService.getUserPosts(userId, page, limit);
                 return ResponseEntity.ok(ApiResponse.<PostFeedResponse>builder()
                                 .success(true)
-                                .message("User posts retrieved successfully")
+                                .message("Lấy bài viết của người dùng thành công")
                                 .data(posts)
                                 .build());
         }

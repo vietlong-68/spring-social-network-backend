@@ -25,7 +25,7 @@ public class CloudinaryService implements FileUploadService {
     public String uploadFile(MultipartFile file) throws IOException {
         if (file.getSize() > maxFileSize) {
             String errorMessage = String.format(
-                    "File size exceeds the maximum limit. Current size: %.2f MB, Maximum allowed: %.2f MB",
+                    "Kích thước file vượt quá giới hạn tối đa. Kích thước hiện tại: %.2f MB, Giới hạn cho phép: %.2f MB",
                     file.getSize() / (1024.0 * 1024.0),
                     maxFileSize / (1024.0 * 1024.0));
             throw new AppException(ErrorCode.BAD_REQUEST, errorMessage);
@@ -35,7 +35,7 @@ public class CloudinaryService implements FileUploadService {
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             return (String) uploadResult.get("url");
         } catch (IOException e) {
-            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to upload file to Cloudinary", e);
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Tải lên file lên Cloudinary thất bại", e);
         }
     }
 }

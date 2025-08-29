@@ -26,6 +26,6 @@ public enum RoleType {
                 return roleType;
             }
         }
-        throw new IllegalArgumentException("Invalid role type code: " + code);
+        throw new IllegalArgumentException("Mã loại vai trò không hợp lệ: " + code);
     }
 }

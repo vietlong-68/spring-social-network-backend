@@ -34,10 +34,10 @@ public class CustomJwtDecoder implements JwtDecoder {
             String jti = claimsSet.getJWTID();
 
             if (invalidatedTokenRepository.existsById(jti)) {
-                throw new JwtException("Token has been logged out");
+                throw new JwtException("Token đã được đăng xuất");
             }
         } catch (Exception e) {
-            throw new JwtException("Invalid token format: " + e.getMessage());
+            throw new JwtException("Định dạng token không hợp lệ: " + e.getMessage());
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {

@@ -95,7 +95,7 @@ public class SandBoxController {
         securityInfo.put("timestamp", System.currentTimeMillis());
         securityInfo.put("timestampReadable", java.time.Instant.now().toString());
         return ResponseEntity
-                .ok(ApiResponse.success(securityInfo, "Security context information retrieved successfully", request));
+                .ok(ApiResponse.success(securityInfo, "Lấy thông tin security context thành công", request));
     }
 
     /**
@@ -128,7 +128,7 @@ public class SandBoxController {
             uploadInfo.put("uploadSuccess", true);
 
             return ResponseEntity.ok(ApiResponse.success(uploadInfo,
-                    "File uploaded successfully", request));
+                    "Tải lên file thành công", request));
 
         } catch (AppException e) {
             throw e;

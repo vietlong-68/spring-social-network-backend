@@ -1,0 +1,387 @@
+{
+    "info": {
+        "_postman_id": "spring-social-network-user-controller",
+        "name": "Spring Social Network - User Controller",
+        "description": "Collection cho tất cả các endpoint của UserController trong Spring Social Network Backend",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "12345678"
+    },
+    "item": [
+        {
+            "name": "User Management",
+            "item": [
+                {
+                    "name": "Get Current User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users/me",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "me"
+                            ]
+                        },
+                        "description": "Lấy thông tin chi tiết của người dùng hiện tại đang đăng nhập"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Current User Authorities",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users/authorities",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "authorities"
+                            ]
+                        },
+                        "description": "Lấy danh sách quyền và vai trò của người dùng hiện tại"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Users (Paginated)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users?page=0&size=20",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0",
+                                    "description": "Số trang (bắt đầu từ 0)"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "20",
+                                    "description": "Kích thước mỗi trang (mặc định: 20)"
+                                }
+                            ]
+                        },
+                        "description": "Lấy danh sách tất cả người dùng trong hệ thống với phân trang"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Search Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users/search?searchTerm=Nguyen&page=0&size=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "search"
+                            ],
+                            "query": [
+                                {
+                                    "key": "searchTerm",
+                                    "value": "Nguyen",
+                                    "description": "Từ khóa tìm kiếm (tên hoặc họ)"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "0",
+                                    "description": "Số trang (bắt đầu từ 0)"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "10",
+                                    "description": "Kích thước mỗi trang"
+                                }
+                            ]
+                        },
+                        "description": "Tìm kiếm người dùng theo tên hoặc họ với phân trang"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User By ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users/{{user_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "{{user_id}}"
+                            ]
+                        },
+                        "description": "Lấy thông tin người dùng theo ID (cho phép USER xem thông tin người dùng khác)"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Các endpoint để xem thông tin người dùng"
+        },
+        {
+            "name": "Profile Management",
+            "item": [
+                {
+                    "name": "Update Profile",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"firstName\": \"Tên mới\",\n  \"lastName\": \"Họ mới\",\n  \"gender\": \"MALE\",\n  \"dateOfBirth\": \"1990-01-01\",\n  \"phone\": \"+84 123 456 789\",\n  \"address\": \"Địa chỉ mới\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "profile"
+                            ]
+                        },
+                        "description": "Cập nhật thông tin cá nhân của người dùng hiện tại"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Change Password",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"currentPassword\": \"MậtKhẩuCũ123!\",\n  \"newPassword\": \"MậtKhẩuMới456!\",\n  \"confirmNewPassword\": \"MậtKhẩuMới456!\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/change-password",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "change-password"
+                            ]
+                        },
+                        "description": "Đổi mật khẩu của người dùng hiện tại"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Các endpoint để quản lý profile và mật khẩu"
+        },
+        {
+            "name": "Profile Picture Management",
+            "item": [
+                {
+                    "name": "Upload Profile Picture",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "src": [],
+                                    "description": "File ảnh đại diện (JPG, PNG, GIF)"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/profile-picture",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "profile-picture"
+                            ]
+                        },
+                        "description": "Upload ảnh đại diện cho người dùng hiện tại"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Remove Profile Picture",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users/profile-picture",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "profile-picture"
+                            ]
+                        },
+                        "description": "Xóa ảnh đại diện của người dùng hiện tại"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Các endpoint để quản lý ảnh đại diện"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "// Pre-request script để kiểm tra token",
+                    "if (!pm.environment.get('access_token')) {",
+                    "    console.warn('Access token chưa được thiết lập. Vui lòng đăng nhập trước.');",
+                    "}"
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "// Test script để kiểm tra response",
+                    "pm.test('Status code is 200 or 201', function () {",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                    "});",
+                    "",
+                    "pm.test('Response has success property', function () {",
+                    "    const responseJson = pm.response.json();",
+                    "    pm.expect(responseJson).to.have.property('success');",
+                    "    pm.expect(responseJson.success).to.be.true;",
+                    "});",
+                    "",
+                    "pm.test('Response has message property', function () {",
+                    "    const responseJson = pm.response.json();",
+                    "    pm.expect(responseJson).to.have.property('message');",
+                    "    pm.expect(responseJson.message).to.be.a('string');",
+                    "});",
+                    "",
+                    "// Lưu user_id nếu response có data.id",
+                    "if (pm.response.code === 200 || pm.response.code === 201) {",
+                    "    const responseJson = pm.response.json();",
+                    "    if (responseJson.data && responseJson.data.id) {",
+                    "        pm.environment.set('user_id', responseJson.data.id);",
+                    "    }",
+                    "}"
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string",
+            "description": "Base URL của Spring Boot application"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string",
+            "description": "JWT access token sau khi đăng nhập"
+        },
+        {
+            "key": "user_id",
+            "value": "",
+            "type": "string",
+            "description": "ID của người dùng để test các endpoint cần user_id"
+        }
+    ]
+}

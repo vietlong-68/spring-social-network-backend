@@ -33,7 +33,7 @@ public class Role {
     @Column(name = "id")
     private Long id;
 
-    @NotNull(message = "Role type is required")
+    @NotNull(message = "Loại vai trò là bắt buộc")
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 20, unique = true)
     private RoleType name;

@@ -52,14 +52,14 @@ public class AdminUserService {
             UserResponseDto userResponseDto = userMapper.toResponseDto(user);
             return userResponseDto;
         } else {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, "User not found with id: " + id);
+            throw new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng với id: " + id);
         }
     }
 
     public UserResponseDto create(CreateUserRequestDto createUserRequestDto) {
         if (userRepository.existsByEmail(createUserRequestDto.getEmail())) {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS,
-                    "Email already exists: " + createUserRequestDto.getEmail());
+                    "Email đã tồn tại: " + createUserRequestDto.getEmail());
         }
 
         User user = userMapper.toEntity(createUserRequestDto);
@@ -68,7 +68,7 @@ public class AdminUserService {
         user.setPassword(encodedPassword);
 
         Role userRole = roleRepository.findByName(RoleType.USER)
-                .orElseThrow(() -> new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Default USER role not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Không tìm thấy role USER mặc định"));
 
         user.setRoles(Set.of(userRole));
 
@@ -84,7 +84,7 @@ public class AdminUserService {
             User updatedUser = userRepository.save(user);
             return userMapper.toResponseDto(updatedUser);
         } else {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, "User not found with id: " + id);
+            throw new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng với id: " + id);
         }
     }
 
@@ -93,7 +93,7 @@ public class AdminUserService {
         if (user.isPresent()) {
             userRepository.deleteById(id);
         } else {
-            throw new AppException(ErrorCode.USER_NOT_FOUND, "User not found with id: " + id);
+            throw new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng với id: " + id);
         }
     }
 }

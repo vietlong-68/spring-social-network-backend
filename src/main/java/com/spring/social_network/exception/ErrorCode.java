@@ -22,7 +22,10 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND("COMMENT_001", "Không tìm thấy bình luận"),
     COMMENT_FORBIDDEN("COMMENT_002", "Không có quyền thao tác với bình luận này"),
     REPLY_NOT_FOUND("REPLY_001", "Không tìm thấy trả lời"),
-    REPLY_FORBIDDEN("REPLY_002", "Không có quyền thao tác với trả lời này");
+    REPLY_FORBIDDEN("REPLY_002", "Không có quyền thao tác với trả lời này"),
+    EMAIL_SEND_FAILED("EMAIL_001", "Gửi email thất bại"),
+    INVALID_TOKEN("TOKEN_001", "Token không hợp lệ"),
+    TOKEN_EXPIRED("TOKEN_002", "Token đã hết hạn");
 
     private final String code;
     private final String message;

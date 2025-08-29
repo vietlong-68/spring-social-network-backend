@@ -33,6 +33,8 @@ public class SecurityConfig {
                 "/auth/logout",
                 "/auth/introspect",
                 "/auth/refresh",
+                "/auth/password/forgot",
+                "/auth/password/reset",
                 "/uploads/**"
         };
     }

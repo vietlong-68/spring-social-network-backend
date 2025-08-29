@@ -12,6 +12,7 @@ import com.spring.social_network.model.post.Comment;
 import com.spring.social_network.model.post.Post;
 import com.spring.social_network.repository.post.CommentRepository;
 import com.spring.social_network.repository.post.PostRepository;
+import com.spring.social_network.repository.post.ReplyRepository;
 import com.spring.social_network.service.FriendshipService;
 import com.spring.social_network.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final ReplyRepository replyRepository;
     private final UserService userService;
     private final UserMapper userMapper;
     private final FriendshipService friendshipService;
@@ -133,6 +135,7 @@ public class CommentService {
                 .content(comment.getContent())
                 .user(userResponse)
                 .postId(comment.getPost().getId())
+                .replyCount((int) replyRepository.countByCommentId(comment.getId()))
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .build();

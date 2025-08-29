@@ -20,7 +20,9 @@ public enum ErrorCode {
     POST_NOT_FOUND("POST_001", "Không tìm thấy bài viết"),
     POST_FORBIDDEN("POST_002", "Không có quyền truy cập bài viết"),
     COMMENT_NOT_FOUND("COMMENT_001", "Không tìm thấy bình luận"),
-    COMMENT_FORBIDDEN("COMMENT_002", "Không có quyền thao tác với bình luận này");
+    COMMENT_FORBIDDEN("COMMENT_002", "Không có quyền thao tác với bình luận này"),
+    REPLY_NOT_FOUND("REPLY_001", "Không tìm thấy trả lời"),
+    REPLY_FORBIDDEN("REPLY_002", "Không có quyền thao tác với trả lời này");
 
     private final String code;
     private final String message;

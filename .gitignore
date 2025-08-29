@@ -42,3 +42,4 @@ logs/*
 
 # Ignore all markdown files
 *.md
+uploads/*

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class FileUploadConfig {
 
-    @Value("${file.upload.provider:cloudinary}")
+    @Value("${file.upload.provider:local}")
     private String uploadProvider;
 
     @Bean

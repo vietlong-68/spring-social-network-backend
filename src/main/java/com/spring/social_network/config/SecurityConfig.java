@@ -27,7 +27,8 @@ public class SecurityConfig {
                 "/auth/login",
                 "/auth/logout",
                 "/auth/introspect",
-                "/auth/refresh"
+                "/auth/refresh",
+                "/uploads/**"
         };
     }
 
@@ -41,7 +42,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable());
         httpSecurity
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, getPublicEndpoints()).permitAll()
+                        .requestMatchers(getPublicEndpoints()).permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)

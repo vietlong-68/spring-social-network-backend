@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -38,4 +39,14 @@ public interface PostRepository extends JpaRepository<Post, String> {
         @org.springframework.data.jpa.repository.Modifying
         @org.springframework.transaction.annotation.Transactional
         void updateCommentCount(@Param("postId") String postId, @Param("commentCount") int commentCount);
+
+        long countByCreatedAtAfter(LocalDateTime dateTime);
+
+        long countByPrivacy(PostPrivacy privacy);
+
+        long countByImageUrlIsNotEmpty();
+
+        long countByVideoUrlIsNotEmpty();
+
+        long countByHashtagsIsNotEmpty();
 }

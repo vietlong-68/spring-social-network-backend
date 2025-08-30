@@ -39,8 +39,9 @@ public class PostController {
                                 parsedHashtags = objectMapper.readValue(hashtags, new TypeReference<List<String>>() {
                                 });
                         } catch (Exception e) {
-
-                                parsedHashtags = List.of(hashtags.trim());
+                                // Fallback: tạo list với một hashtag
+                                parsedHashtags = new ArrayList<>();
+                                parsedHashtags.add(hashtags.trim());
                         }
                 }
 
@@ -74,8 +75,9 @@ public class PostController {
                                 parsedHashtags = objectMapper.readValue(hashtags, new TypeReference<List<String>>() {
                                 });
                         } catch (Exception e) {
-
-                                parsedHashtags = List.of(hashtags.trim());
+                                // Fallback: tạo list với một hashtag
+                                parsedHashtags = new ArrayList<>();
+                                parsedHashtags.add(hashtags.trim());
                         }
                 }
 

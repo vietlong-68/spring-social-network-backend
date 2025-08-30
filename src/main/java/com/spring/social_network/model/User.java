@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,7 +63,8 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { jakarta.persistence.CascadeType.MERGE,
+            jakarta.persistence.CascadeType.PERSIST })
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), indexes = {
             @Index(name = "idx_user_roles_user_id", columnList = "user_id"),
             @Index(name = "idx_user_roles_role_id", columnList = "role_id")
@@ -99,6 +102,16 @@ public class User {
 
     @Column(name = "profile_picture", length = 255)
     private String profilePictureUrl;
+
+    @Column(name = "is_blocked", nullable = false)
+    @Builder.Default
+    private Boolean isBlocked = false;
+
+    @Column(name = "block_reason", length = 500)
+    private String blockReason;
+
+    @Column(name = "blocked_at")
+    private LocalDateTime blockedAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

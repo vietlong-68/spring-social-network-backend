@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,7 +71,9 @@ public class AuthService {
                 .orElseThrow(() -> new AppException(ErrorCode.INTERNAL_SERVER_ERROR,
                         "Không tìm thấy role USER mặc định"));
 
-        user.setRoles(Set.of(userRole));
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        user.setRoles(roles);
 
         User savedUser = userRepository.save(user);
 
@@ -86,6 +89,12 @@ public class AuthService {
     public LoginResponse handleLogin(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.getIsBlocked() != null && user.getIsBlocked()) {
+            throw new AppException(ErrorCode.USER_IS_BLOCKED,
+                    "Tài khoản của bạn đã bị khóa. Lý do: " +
+                            (user.getBlockReason() != null ? user.getBlockReason() : "Không có thông tin"));
+        }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.INVALID_CREDENTIALS);
@@ -128,6 +137,12 @@ public class AuthService {
 
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng"));
+
+        if (user.getIsBlocked() != null && user.getIsBlocked()) {
+            throw new AppException(ErrorCode.USER_IS_BLOCKED,
+                    "Tài khoản của bạn đã bị khóa. Lý do: " +
+                            (user.getBlockReason() != null ? user.getBlockReason() : "Không có thông tin"));
+        }
 
         String jti = claimsSet.getJWTID();
         Date expirationTime = claimsSet.getExpirationTime();

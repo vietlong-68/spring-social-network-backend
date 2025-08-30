@@ -13,17 +13,23 @@ import org.springframework.stereotype.Component;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.spring.social_network.repository.InvalidatedTokenRepository;
+import com.spring.social_network.repository.UserRepository;
+import com.spring.social_network.exception.AppException;
+import com.spring.social_network.exception.ErrorCode;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
 
     private final JwtConfig jwtConfig;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
+    private final UserRepository userRepository;
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
-    public CustomJwtDecoder(JwtConfig jwtConfig, InvalidatedTokenRepository invalidatedTokenRepository) {
+    public CustomJwtDecoder(JwtConfig jwtConfig, InvalidatedTokenRepository invalidatedTokenRepository,
+            UserRepository userRepository) {
         this.jwtConfig = jwtConfig;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -36,6 +42,20 @@ public class CustomJwtDecoder implements JwtDecoder {
             if (invalidatedTokenRepository.existsById(jti)) {
                 throw new JwtException("Token đã được đăng xuất");
             }
+
+            String userEmail = claimsSet.getSubject();
+            if (userEmail != null) {
+                userRepository.findByEmail(userEmail).ifPresent(user -> {
+                    if (user.getIsBlocked() != null && user.getIsBlocked()) {
+                        throw new RuntimeException("Tài khoản đã bị khóa. Lý do: " +
+                                (user.getBlockReason() != null ? user.getBlockReason() : "Không có thông tin"));
+                    }
+                });
+            }
+
+        } catch (RuntimeException e) {
+
+            throw e;
         } catch (Exception e) {
             throw new JwtException("Định dạng token không hợp lệ: " + e.getMessage());
         }

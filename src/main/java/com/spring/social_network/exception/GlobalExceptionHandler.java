@@ -152,6 +152,8 @@ public class GlobalExceptionHandler {
                                 return HttpStatus.BAD_REQUEST;
                         case USER_UNAUTHORIZED:
                                 return HttpStatus.UNAUTHORIZED;
+                        case USER_IS_BLOCKED:
+                                return HttpStatus.FORBIDDEN;
                         case METHOD_NOT_ALLOWED:
                                 return HttpStatus.METHOD_NOT_ALLOWED;
                         case REQUEST_TIMEOUT:
@@ -273,6 +275,29 @@ public class GlobalExceptionHandler {
                                 request);
 
                 return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        @ExceptionHandler(RuntimeException.class)
+        public ResponseEntity<ApiResponse<Object>> handleRuntimeException(
+                        RuntimeException ex, HttpServletRequest request) {
+
+                if (ex.getMessage() != null && ex.getMessage().contains("Tài khoản đã bị khóa")) {
+                        ApiResponse<Object> apiResponse = ApiResponse.error(
+                                        ex.getMessage(),
+                                        HttpStatus.FORBIDDEN.value(),
+                                        "Tài khoản đã bị khóa",
+                                        request);
+
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
+                }
+
+                ApiResponse<Object> apiResponse = ApiResponse.error(
+                                ex.getMessage(),
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                "Lỗi runtime",
+                                request);
+
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
         }
 
         @ExceptionHandler(Exception.class)

@@ -1,5 +1,7 @@
 package com.spring.social_network.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.social_network.model.User;
 import com.spring.social_network.model.RoleType;
+import com.spring.social_network.model.Gender;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
@@ -23,4 +26,20 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<User> findByFirstNameOrLastNameContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    List<User> findByIsBlockedTrue();
+
+    long countByIsBlockedFalse();
+
+    long countByIsBlockedTrue();
+
+    long countByCreatedAtAfter(LocalDateTime dateTime);
+
+    long countByGender(Gender gender);
+
+    long countByProfilePictureUrlIsNotNull();
+
+    long countByPhoneIsNotNull();
+
+    long countByAddressIsNotNull();
 }

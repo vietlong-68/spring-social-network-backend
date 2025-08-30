@@ -16,4 +16,9 @@ public interface CommentRepository extends JpaRepository<Comment, String> {
 
     @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId")
     long countByPostId(@Param("postId") String postId);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query("DELETE FROM Comment c WHERE c.post.id = :postId")
+    int deleteByPostId(@Param("postId") String postId);
 }

@@ -111,7 +111,7 @@ public class SandBoxController {
      */
     @PostMapping("/upload-test")
     public ResponseEntity<ApiResponse<Map<String, Object>>> testFileUpload(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(name = "file") MultipartFile file,
             HttpServletRequest request) {
 
         Map<String, Object> uploadInfo = new HashMap<>();

@@ -33,9 +33,9 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     long countByIsBlockedTrue();
 
-    long countByCreatedAtAfter(LocalDateTime dateTime);
+    long countByCreatedAtAfter(@Param("dateTime") LocalDateTime dateTime);
 
-    long countByGender(Gender gender);
+    long countByGender(@Param("gender") Gender gender);
 
     long countByProfilePictureUrlIsNotNull();
 

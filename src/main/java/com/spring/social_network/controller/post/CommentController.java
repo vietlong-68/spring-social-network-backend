@@ -22,7 +22,7 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<CommentResponse>> createComment(
-            @PathVariable String postId,
+            @PathVariable(name = "postId") String postId,
             @Valid @RequestBody CreateCommentRequest request) {
 
         CommentResponse comment = commentService.createComment(postId, request);
@@ -33,9 +33,9 @@ public class CommentController {
 
     @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<ApiResponse<Page<CommentResponse>>> getComments(
-            @PathVariable String postId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @PathVariable(name = "postId") String postId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
 
         Page<CommentResponse> comments = commentService.getCommentsByPostId(postId, page, size);
 
@@ -44,7 +44,7 @@ public class CommentController {
 
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse<CommentResponse>> updateComment(
-            @PathVariable String commentId,
+            @PathVariable(name = "commentId") String commentId,
             @Valid @RequestBody UpdateCommentRequest request) {
 
         CommentResponse comment = commentService.updateComment(commentId, request);
@@ -53,7 +53,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable String commentId) {
+    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable(name = "commentId") String commentId) {
 
         commentService.deleteComment(commentId);
 

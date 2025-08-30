@@ -22,7 +22,7 @@ public class ReplyController {
 
     @PostMapping("/comments/{commentId}/replies")
     public ResponseEntity<ApiResponse<ReplyResponse>> createReply(
-            @PathVariable String commentId,
+            @PathVariable(name = "commentId") String commentId,
             @Valid @RequestBody CreateReplyRequest request) {
 
         ReplyResponse reply = replyService.createReply(commentId, request);
@@ -33,9 +33,9 @@ public class ReplyController {
 
     @GetMapping("/comments/{commentId}/replies")
     public ResponseEntity<ApiResponse<Page<ReplyResponse>>> getReplies(
-            @PathVariable String commentId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @PathVariable(name = "commentId") String commentId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size) {
 
         Page<ReplyResponse> replies = replyService.getRepliesByCommentId(commentId, page, size);
 
@@ -44,7 +44,7 @@ public class ReplyController {
 
     @PatchMapping("/replies/{replyId}")
     public ResponseEntity<ApiResponse<ReplyResponse>> updateReply(
-            @PathVariable String replyId,
+            @PathVariable(name = "replyId") String replyId,
             @Valid @RequestBody UpdateReplyRequest request) {
 
         ReplyResponse reply = replyService.updateReply(replyId, request);
@@ -53,7 +53,7 @@ public class ReplyController {
     }
 
     @DeleteMapping("/replies/{replyId}")
-    public ResponseEntity<ApiResponse<Void>> deleteReply(@PathVariable String replyId) {
+    public ResponseEntity<ApiResponse<Void>> deleteReply(@PathVariable(name = "replyId") String replyId) {
 
         replyService.deleteReply(replyId);
 

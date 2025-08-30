@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -166,26 +167,50 @@ public class FriendshipService {
         User targetUser = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND, "Không tìm thấy người dùng"));
 
-        Optional<Friendship> friendshipOpt = friendshipRepository.findByUsers(currentUser, targetUser);
+        List<Friendship> friendships = friendshipRepository.findByUsers(currentUser, targetUser);
 
-        if (friendshipOpt.isEmpty()) {
-            return FriendshipStatusResponseDto.builder().status("not_friends").build();
+        if (friendships.isEmpty()) {
+            return FriendshipStatusResponseDto.builder()
+                    .status("not_friends")
+                    .friendshipId(null)
+                    .build();
         }
 
-        Friendship friendship = friendshipOpt.get();
+        if (friendships.size() > 1) {
+            System.out.println("WARNING: Found " + friendships.size() + " friendships between users " +
+                    currentUser.getId() + " and " + targetUser.getId());
+
+            cleanupDuplicateFriendships(friendships);
+
+            friendships = friendshipRepository.findByUsers(currentUser, targetUser);
+        }
+
+        Friendship friendship = friendships.get(0);
 
         switch (friendship.getStatus()) {
             case ACCEPTED:
-                return FriendshipStatusResponseDto.builder().status("friends").build();
+                return FriendshipStatusResponseDto.builder()
+                        .status("friends")
+                        .friendshipId(friendship.getId())
+                        .build();
             case PENDING:
                 if (friendship.getSender().getId().equals(currentUser.getId())) {
-                    return FriendshipStatusResponseDto.builder().status("request_sent").build();
+                    return FriendshipStatusResponseDto.builder()
+                            .status("request_sent")
+                            .friendshipId(friendship.getId())
+                            .build();
                 } else {
-                    return FriendshipStatusResponseDto.builder().status("request_received").build();
+                    return FriendshipStatusResponseDto.builder()
+                            .status("request_received")
+                            .friendshipId(friendship.getId())
+                            .build();
                 }
             case REJECTED:
             default:
-                return FriendshipStatusResponseDto.builder().status("not_friends").build();
+                return FriendshipStatusResponseDto.builder()
+                        .status("not_friends")
+                        .friendshipId(friendship.getId())
+                        .build();
         }
     }
 
@@ -211,5 +236,20 @@ public class FriendshipService {
                 .friend(userMapper.toResponseDto(friend))
                 .acceptedAt(friendship.getAcceptedAt())
                 .build();
+    }
+
+    private void cleanupDuplicateFriendships(List<Friendship> friendships) {
+        if (friendships.size() <= 1) {
+            return;
+        }
+
+        friendships.sort((f1, f2) -> f2.getRequestedAt().compareTo(f1.getRequestedAt()));
+
+        for (int i = 1; i < friendships.size(); i++) {
+            Friendship duplicate = friendships.get(i);
+            System.out.println("Removing duplicate friendship: " + duplicate.getId() +
+                    " created at: " + duplicate.getRequestedAt());
+            friendshipRepository.delete(duplicate);
+        }
     }
 }

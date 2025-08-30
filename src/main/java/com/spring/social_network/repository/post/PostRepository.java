@@ -16,16 +16,18 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, String> {
 
         @Query("SELECT p FROM Post p WHERE p.privacy = :privacy ORDER BY p.createdAt DESC")
-        Page<Post> findByPrivacyOrderByCreatedAtDesc(PostPrivacy privacy, Pageable pageable);
+        Page<Post> findByPrivacyOrderByCreatedAtDesc(@Param("privacy") PostPrivacy privacy, Pageable pageable);
 
         @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND p.privacy = :privacy ORDER BY p.createdAt DESC")
-        Page<Post> findByUserIdAndPrivacyOrderByCreatedAtDesc(String userId, PostPrivacy privacy, Pageable pageable);
+        Page<Post> findByUserIdAndPrivacyOrderByCreatedAtDesc(@Param("userId") String userId,
+                        @Param("privacy") PostPrivacy privacy, Pageable pageable);
 
         @Query("SELECT p FROM Post p WHERE p.user.id = :userId ORDER BY p.createdAt DESC")
-        Page<Post> findByUserIdOrderByCreatedAtDesc(String userId, Pageable pageable);
+        Page<Post> findByUserIdOrderByCreatedAtDesc(@Param("userId") String userId, Pageable pageable);
 
         @Query("SELECT p FROM Post p WHERE p.user.id IN :friendIds AND p.privacy = :privacy ORDER BY p.createdAt DESC")
-        Page<Post> findByUserIdInAndPrivacyOrderByCreatedAtDesc(List<String> friendIds, PostPrivacy privacy,
+        Page<Post> findByUserIdInAndPrivacyOrderByCreatedAtDesc(@Param("friendIds") List<String> friendIds,
+                        @Param("privacy") PostPrivacy privacy,
                         Pageable pageable);
 
         @Query("SELECT p FROM Post p WHERE (p.privacy = :publicPrivacy) OR (p.user.id IN :friendIds AND p.privacy = :friendsPrivacy) OR (p.user.id = :currentUserId) ORDER BY p.createdAt DESC")
@@ -40,9 +42,9 @@ public interface PostRepository extends JpaRepository<Post, String> {
         @org.springframework.transaction.annotation.Transactional
         void updateCommentCount(@Param("postId") String postId, @Param("commentCount") int commentCount);
 
-        long countByCreatedAtAfter(LocalDateTime dateTime);
+        long countByCreatedAtAfter(@Param("dateTime") LocalDateTime dateTime);
 
-        long countByPrivacy(PostPrivacy privacy);
+        long countByPrivacy(@Param("privacy") PostPrivacy privacy);
 
         long countByImageUrlIsNotEmpty();
 

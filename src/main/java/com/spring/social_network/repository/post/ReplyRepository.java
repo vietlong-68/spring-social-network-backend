@@ -16,4 +16,9 @@ public interface ReplyRepository extends JpaRepository<Reply, String> {
 
     @Query("SELECT COUNT(r) FROM Reply r WHERE r.comment.id = :commentId")
     long countByCommentId(@Param("commentId") String commentId);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query("DELETE FROM Reply r WHERE r.comment.id IN (SELECT c.id FROM Comment c WHERE c.post.id = :postId)")
+    int deleteByPostId(@Param("postId") String postId);
 }

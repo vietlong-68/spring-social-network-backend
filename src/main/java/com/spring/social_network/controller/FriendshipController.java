@@ -71,8 +71,8 @@ public class FriendshipController {
      */
     @GetMapping("/sent")
     public ResponseEntity<ApiResponse<Page<FriendshipResponseDto>>> getSentRequests(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "limit", defaultValue = "20") int limit,
             HttpServletRequest httpRequest) {
         Pageable pageable = PageRequest.of(page - 1, limit);
         Page<FriendshipResponseDto> response = friendshipService.getSentRequests(pageable);
@@ -89,8 +89,8 @@ public class FriendshipController {
      */
     @GetMapping("/received")
     public ResponseEntity<ApiResponse<Page<FriendshipResponseDto>>> getReceivedRequests(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "limit", defaultValue = "20") int limit,
             HttpServletRequest httpRequest) {
         Pageable pageable = PageRequest.of(page - 1, limit);
         Page<FriendshipResponseDto> response = friendshipService.getReceivedRequests(pageable);
@@ -107,7 +107,7 @@ public class FriendshipController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> cancelFriendRequest(
-            @PathVariable String id,
+            @PathVariable(name = "id") String id,
             HttpServletRequest httpRequest) {
         friendshipService.cancelFriendRequest(id);
         return ResponseEntity.ok(ApiResponse.success("Hủy lời mời kết bạn thành công", httpRequest));
@@ -122,7 +122,7 @@ public class FriendshipController {
      */
     @PatchMapping("/{id}/accept")
     public ResponseEntity<ApiResponse<String>> acceptFriendRequest(
-            @PathVariable String id,
+            @PathVariable(name = "id") String id,
             HttpServletRequest httpRequest) {
         friendshipService.acceptFriendRequest(id);
         return ResponseEntity.ok(ApiResponse.success("Chấp nhận lời mời kết bạn thành công", httpRequest));
@@ -137,7 +137,7 @@ public class FriendshipController {
      */
     @PatchMapping("/{id}/decline")
     public ResponseEntity<ApiResponse<String>> declineFriendRequest(
-            @PathVariable String id,
+            @PathVariable(name = "id") String id,
             HttpServletRequest httpRequest) {
         friendshipService.declineFriendRequest(id);
         return ResponseEntity.ok(ApiResponse.success("Từ chối lời mời kết bạn thành công", httpRequest));
@@ -153,8 +153,8 @@ public class FriendshipController {
      */
     @GetMapping
     public ResponseEntity<ApiResponse<Page<FriendResponseDto>>> getFriends(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "limit", defaultValue = "20") int limit,
             HttpServletRequest httpRequest) {
         Pageable pageable = PageRequest.of(page - 1, limit);
         Page<FriendResponseDto> response = friendshipService.getFriends(pageable);
@@ -170,7 +170,7 @@ public class FriendshipController {
      */
     @DeleteMapping("/{id}/remove")
     public ResponseEntity<ApiResponse<String>> removeFriend(
-            @PathVariable String id,
+            @PathVariable(name = "id") String id,
             HttpServletRequest httpRequest) {
         friendshipService.removeFriend(id);
         return ResponseEntity.ok(ApiResponse.success("Hủy kết bạn thành công", httpRequest));
@@ -185,7 +185,7 @@ public class FriendshipController {
      */
     @GetMapping("/status")
     public ResponseEntity<ApiResponse<FriendshipStatusResponseDto>> getFriendshipStatus(
-            @RequestParam String userId,
+            @RequestParam(name = "userId") String userId,
             HttpServletRequest httpRequest) {
         FriendshipStatusResponseDto response = friendshipService.getFriendshipStatus(userId);
         return ResponseEntity.ok(ApiResponse.success(response, "Kiểm tra trạng thái quan hệ thành công", httpRequest));

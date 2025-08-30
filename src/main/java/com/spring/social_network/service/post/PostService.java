@@ -13,6 +13,9 @@ import com.spring.social_network.model.User;
 import com.spring.social_network.model.post.Post;
 import com.spring.social_network.model.post.PostPrivacy;
 import com.spring.social_network.repository.post.PostRepository;
+import com.spring.social_network.repository.post.ReactionRepository;
+import com.spring.social_network.repository.post.CommentRepository;
+import com.spring.social_network.repository.post.ReplyRepository;
 import com.spring.social_network.service.FileUploadService;
 import com.spring.social_network.service.FriendshipService;
 import com.spring.social_network.service.UserService;
@@ -34,6 +37,9 @@ public class PostService {
     private final FriendshipService friendshipService;
     private final UserMapper userMapper;
     private final FileUploadService fileUploadService;
+    private final ReactionRepository reactionRepository;
+    private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
 
     public PostResponse createPost(CreatePostRequest request) {
         User currentUser = userService.getCurrentUserEntity();
@@ -148,7 +154,17 @@ public class PostService {
             throw new AppException(ErrorCode.POST_FORBIDDEN, "Bạn chỉ có thể xóa bài viết của mình");
         }
 
-        postRepository.delete(post);
+        try {
+
+            deleteAllPostRelatedData(postId);
+
+            postRepository.delete(post);
+
+        } catch (Exception e) {
+            System.err.println("Error deleting post " + postId + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Lỗi khi xóa bài viết: " + e.getMessage());
+        }
     }
 
     public PostFeedResponse getFeed(int page, int limit) {
@@ -201,34 +217,100 @@ public class PostService {
             return buildPostFeedResponse(postsPage, currentUser.getId(), page, limit);
         }
 
-        boolean isFriend = friendshipService.getFriendshipStatus(userId).getStatus().equals("friends");
+        boolean isFriend = false;
+        try {
+            isFriend = friendshipService.getFriendshipStatus(userId).getStatus().equals("friends");
+        } catch (Exception e) {
+            System.err.println("Error checking friendship status: " + e.getMessage());
+
+            isFriend = false;
+        }
 
         if (isFriend) {
+            try {
+                System.out.println("Getting posts for friend user: " + userId);
+                System.out.println("Page: " + page + ", Limit: " + limit);
 
-            Page<Post> publicPosts = postRepository.findByUserIdAndPrivacyOrderByCreatedAtDesc(userId,
-                    PostPrivacy.PUBLIC, pageable);
-            Page<Post> friendsPosts = postRepository.findByUserIdAndPrivacyOrderByCreatedAtDesc(userId,
-                    PostPrivacy.FRIENDS, pageable);
+                Page<Post> publicPosts = postRepository.findByUserIdAndPrivacyOrderByCreatedAtDesc(userId,
+                        PostPrivacy.PUBLIC, pageable);
+                Page<Post> friendsPosts = postRepository.findByUserIdAndPrivacyOrderByCreatedAtDesc(userId,
+                        PostPrivacy.FRIENDS, pageable);
 
-            List<Post> allPosts = publicPosts.getContent();
-            allPosts.addAll(friendsPosts.getContent());
-            allPosts.sort((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt()));
+                System.out.println(
+                        "Public posts count: " + (publicPosts != null ? publicPosts.getTotalElements() : "null"));
+                System.out.println(
+                        "Friends posts count: " + (friendsPosts != null ? friendsPosts.getTotalElements() : "null"));
 
-            int start = (page - 1) * limit;
-            int end = Math.min(start + limit, allPosts.size());
-            List<Post> paginatedPosts = allPosts.subList(start, end);
+                List<Post> allPosts = new java.util.ArrayList<>();
+                if (publicPosts != null && publicPosts.getContent() != null) {
+                    allPosts.addAll(publicPosts.getContent());
+                }
+                if (friendsPosts != null && friendsPosts.getContent() != null) {
+                    allPosts.addAll(friendsPosts.getContent());
+                }
 
-            List<PostResponse> posts = paginatedPosts.stream()
-                    .map(post -> mapToPostResponse(post, currentUser.getId()))
-                    .collect(Collectors.toList());
+                allPosts.sort((p1, p2) -> {
+                    if (p1.getCreatedAt() == null && p2.getCreatedAt() == null)
+                        return 0;
+                    if (p1.getCreatedAt() == null)
+                        return 1;
+                    if (p2.getCreatedAt() == null)
+                        return -1;
+                    return p2.getCreatedAt().compareTo(p1.getCreatedAt());
+                });
 
-            return PostFeedResponse.builder()
-                    .posts(posts)
-                    .currentPage(page)
-                    .totalPages((int) Math.ceil((double) allPosts.size() / limit))
-                    .totalElements(allPosts.size())
-                    .pageSize(limit)
-                    .build();
+                int totalPosts = allPosts.size();
+                int totalPages = (int) Math.ceil((double) totalPosts / limit);
+                int start = (page - 1) * limit;
+
+                System.out.println("Total posts: " + totalPosts + ", Total pages: " + totalPages);
+                System.out.println("Start index: " + start + ", End index: " + Math.min(start + limit, totalPosts));
+
+                if (start >= totalPosts) {
+                    System.out.println("Page index out of bounds, returning empty result");
+
+                    return PostFeedResponse.builder()
+                            .posts(new java.util.ArrayList<>())
+                            .currentPage(page)
+                            .totalPages(totalPages)
+                            .totalElements(totalPosts)
+                            .pageSize(limit)
+                            .build();
+                }
+
+                int end = Math.min(start + limit, totalPosts);
+                List<Post> paginatedPosts = allPosts.subList(start, end);
+
+                System.out.println("Paginated posts count: " + paginatedPosts.size());
+
+                System.out.println("Mapping posts to response...");
+                List<PostResponse> posts = paginatedPosts.stream()
+                        .map(post -> {
+                            try {
+                                return mapToPostResponse(post, currentUser.getId());
+                            } catch (Exception e) {
+                                System.err.println("Error mapping post " + post.getId() + ": " + e.getMessage());
+                                e.printStackTrace();
+                                return null;
+                            }
+                        })
+                        .filter(post -> post != null)
+                        .collect(Collectors.toList());
+
+                System.out.println("Successfully mapped " + posts.size() + " posts");
+
+                return PostFeedResponse.builder()
+                        .posts(posts)
+                        .currentPage(page)
+                        .totalPages(totalPages)
+                        .totalElements(totalPosts)
+                        .pageSize(limit)
+                        .build();
+            } catch (Exception e) {
+                System.err.println("Error getting friend posts: " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException("Lỗi khi lấy bài viết của bạn bè: " + e.getMessage());
+            }
         } else {
 
             Page<Post> postsPage = postRepository.findByUserIdAndPrivacyOrderByCreatedAtDesc(userId, PostPrivacy.PUBLIC,
@@ -284,5 +366,27 @@ public class PostService {
                 .totalElements(postsPage.getTotalElements())
                 .pageSize(limit)
                 .build();
+    }
+
+    private void deleteAllPostRelatedData(String postId) {
+        try {
+            System.out.println("Deleting all data related to post: " + postId);
+
+            int deletedReplies = replyRepository.deleteByPostId(postId);
+            System.out.println("Deleted " + deletedReplies + " replies");
+
+            int deletedComments = commentRepository.deleteByPostId(postId);
+            System.out.println("Deleted " + deletedComments + " comments");
+
+            int deletedReactions = reactionRepository.deleteByPostId(postId);
+            System.out.println("Deleted " + deletedReactions + " reactions");
+
+            System.out.println("Successfully deleted all related data for post: " + postId);
+
+        } catch (Exception e) {
+            System.err.println("Error deleting post related data: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi xóa dữ liệu liên quan đến bài viết: " + e.getMessage());
+        }
     }
 }

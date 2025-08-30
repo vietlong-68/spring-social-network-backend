@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendshipStatusResponseDto {
-    private String status; 
+    private String status;
+    private String friendshipId;
 }
